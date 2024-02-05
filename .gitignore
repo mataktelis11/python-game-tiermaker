@@ -1,3 +1,5 @@
 cached_files/
 config.toml
 *.db
+*.csv
+__pycache__
