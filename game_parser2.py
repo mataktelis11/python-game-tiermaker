@@ -3,6 +3,9 @@ import os
 import json
 import tomllib
 import sqlite3
+import requests
+import wget
+
 
 with open("config.toml", "rb") as f:
         config = tomllib.load(f)
@@ -42,3 +45,103 @@ def search_game_title(title):
     else:
         print('Game not in cache')
         return None
+
+def fetch_game_guid(title):
+     # first perform a search with the game's title to find it's guid
+
+        
+    payload = {'api_key': config['APIKEY'], 
+            'format': 'json',
+            'resources': 'game',
+            'limit': 1,
+            'field_list': 'guid',
+            'query': title}
+    
+    response = requests.get('https://www.giantbomb.com/api/search/',
+                     params=payload,
+                     headers = {"User-Agent": "guicli-call"})
+    
+    response.raise_for_status()
+    
+    raw_data = response.json()
+
+    #print(raw_data)
+
+    '''
+    {
+        'error': 'OK',
+        'limit': 1,
+        'offset': 0, 
+        'number_of_page_results': 1, 
+        'number_of_total_results': 362, 
+        'status_code': 1, 
+        'results': [
+            {'guid': '3030-2512', 
+            'resource_type': 'game'}
+            ], 
+        'version': '1.0'}
+
+    '''
+
+    game_guid = raw_data['results'][0]['guid']
+
+    return game_guid
+
+
+def fetch_game_data(guid):
+     
+    # use the guid to fetch the necessary game info
+
+    payload = {'api_key': config['APIKEY'], 
+            'format': 'json',
+            'field_list': 'image,genres,platforms,developers,publishers,name,original_release_date'}
+    
+    response = requests.get(f'https://www.giantbomb.com/api/game/{guid}/',
+                     params=payload,
+                     headers = {"User-Agent": "guicli-call"})
+    
+    response.raise_for_status()
+    
+    raw_data = response.json()
+
+    game_data = {'title': raw_data['results']['name'],
+                'original_release_date':raw_data['results']['original_release_date'],
+                'platforms': raw_data['results']['platforms'],
+                'developers': raw_data['results']['developers'],
+                'publishers': raw_data['results']['publishers'],
+                'genres': raw_data['results']['genres'],
+                'guid': guid}
+
+    entries_to_remove = ('api_detail_url', 'id', 'site_detail_url', 'abbreviation')
+
+    for element in game_data['platforms']:
+        for e in entries_to_remove:
+            element.pop(e, None)
+
+    for element in game_data['developers']:
+        for e in entries_to_remove:
+            element.pop(e, None)
+
+    for element in game_data['publishers']:
+        for e in entries_to_remove:
+            element.pop(e, None)
+
+    for element in game_data['genres']:
+        for e in entries_to_remove:
+            element.pop(e, None)
+
+    #print(game_data)
+            
+    os.mkdir(os.path.join(config['CACHE_DIR'], game_data['title']))
+
+    with open(os.path.join(config['CACHE_DIR'], game_data['title'], 'game_data.json'), 'w') as f:
+        json.dump(game_data, f, indent=4)
+
+
+    image_url = str(raw_data['results']['image']['original_url'])
+    image_url = image_url.replace('\\','')
+
+    #print(image_url)
+
+    wget.download(image_url, os.path.join(config['CACHE_DIR'],game_data['title'],'image.jpg'), bar=False)
+    
