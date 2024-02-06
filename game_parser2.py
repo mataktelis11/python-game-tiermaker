@@ -46,6 +46,25 @@ def search_game_title(title):
         print('Game not in cache')
         return None
 
+def search_game_with_API(title):
+    payload = {'api_key': config['APIKEY'], 
+        'format': 'json',
+        'resources': 'game',
+        'limit': 10,
+        'field_list': 'name,guid',
+        'query': title}
+    
+    response = requests.get('https://www.giantbomb.com/api/search/',
+                     params=payload,
+                     headers = {"User-Agent": "guicli-call"})
+    
+    response.raise_for_status()
+    
+    raw_data = response.json()
+
+    return raw_data['results']
+
+
 def fetch_game_guid(title):
      # first perform a search with the game's title to find it's guid
 

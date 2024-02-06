@@ -53,8 +53,8 @@ def button_function2():
 
 tierFrame = customtkinter.CTkFrame(master=app)
 
-tierFrame.grid_rowconfigure((0,1,2,3,4), weight=1)
-tierFrame.grid_columnconfigure((1,2,3,4,5,6,7,8,9), weight=3)
+tierFrame.grid_rowconfigure((0,1,2,3,4), weight=0, minsize=100)
+tierFrame.grid_columnconfigure((1,2,3,4,5,6,7), weight=3)
 tierFrame.grid_columnconfigure(0, weight=1)
 
 tierFrame.grid(row=0, column=0, sticky="wesn")
@@ -79,7 +79,7 @@ for row in range(len(tiers)):
     currentRowLabels = []
     currentRowImages = []
 
-    for i in range(1,10):
+    for i in range(1,7):
         image_label = customtkinter.CTkLabel(tierFrame, text="", fg_color='blue')
         currentRowLabels.append(image_label)
         image_label.grid(row=row, column=i, sticky="wesn")
