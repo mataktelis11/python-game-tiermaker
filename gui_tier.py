@@ -17,16 +17,39 @@ app.grid_columnconfigure(0, weight=1)
 
 
 
+def adjust_image(event, arg):
+
+    if imageLabels[arg['row']][arg['id']]._image=='':
+        return
+    
+    if imageLabels[arg['row']][arg['id']]._image is None:
+        return
+    
+    width = event.width
+    height = event.height
+
+    # if height > 50:
+    #     height = 50
+
+    imageObjects[arg['row']][arg['id']].configure(size=(width,height))
+    
+
 
 def button_function1():
     image = customtkinter.CTkImage(light_image=Image.open('book.jpg'))
 
-    for label in imageLabelsS:
-        label.configure(image=image)
+    for row, labelrow in enumerate(imageLabels):
+        for col, label in enumerate(labelrow):
+            
+            imageLabels[row][col].configure(image=image)
+            imageObjects[row][col] = image
+
+        
 
 
 def button_function2():
-    pass
+    imageLabels[1][3].configure(image='')
+    imageLabels[2][4].configure(image='')
 
 tierFrame = customtkinter.CTkFrame(master=app)
 
@@ -45,13 +68,31 @@ for i in range(5):
                                    text_color='black')
     label.grid(row=i, column=0, sticky="wesn")
 
+    
 
-imageLabelsS = []
 
-for i in range(1,10):
-    image_label = customtkinter.CTkLabel(tierFrame, text="")
-    imageLabelsS.append(image_label)
-    image_label.grid(row=0, column=i, sticky="wesn")
+imageLabels = []
+imageObjects = []
+
+for row in range(len(tiers)):
+
+    currentRowLabels = []
+    currentRowImages = []
+
+    for i in range(1,10):
+        image_label = customtkinter.CTkLabel(tierFrame, text="", fg_color='blue')
+        currentRowLabels.append(image_label)
+        image_label.grid(row=row, column=i, sticky="wesn")
+
+        # source:   https://stackoverflow.com/questions/3296893/how-to-pass-an-argument-to-event-handler-in-tkinter
+        #           https://www.youtube.com/watch?v=VnwDPa9biwc        
+        data = {"row": row, "id": i-1}
+        image_label.bind("<Configure>", lambda event, arg=data: adjust_image(event, arg))
+
+        currentRowImages.append(0)
+
+    imageLabels.append(currentRowLabels)
+    imageObjects.append(currentRowImages)
 
 
 containerFrame = customtkinter.CTkFrame(master=app)
