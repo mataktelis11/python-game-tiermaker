@@ -91,6 +91,12 @@ class App(customtkinter.CTk):
         self.choosen_guid = ''
 
         self.context_menu = tkinter.Menu(self, tearoff=0)
+
+        for t in self.tiers:
+            self.context_menu.add_command(label=f"Move to tier {t}",
+                                      command= lambda arg=t: self.context_move_to_tier(arg))
+
+        self.context_menu.add_separator()
         self.context_menu.add_command(label="Remove Game", command=self.context_menu_remove)
         self.context_menu.add_command(label="Close")
         
@@ -145,10 +151,10 @@ class App(customtkinter.CTk):
         container_ratio = 1.0
 
         if container_ratio > image_ratio:
-            height = 120
+            height = 130
             width = int(height * image_ratio)
         else:
-            width = 120
+            width = 130
             height = int(width / image_ratio)
 
         main_image = customtkinter.CTkImage(light_image=pillow_image, size=(width,height))
@@ -163,6 +169,13 @@ class App(customtkinter.CTk):
 
     def context_menu_remove(self):
         self.remove_game_from_container(self.choosen_guid)
+
+    def context_move_to_tier(self, arg):
+        tier = arg
+        index = config['tiers'].index(tier)
+        self.append_game_to_tier(self.container_tier[index],self.choosen_guid)
+        self.remove_game_from_container(self.choosen_guid)
+        
 
     def clicked_image(self, event, arg):
         print(f'image was clicked with guid: {arg["guid"]}')
