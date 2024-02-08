@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import customtkinter
-import tkinter 
+import tkinter
 from PIL import Image
 
 from GameBrowserFrame import GameBrowserFrame
@@ -38,6 +38,11 @@ class App(customtkinter.CTk):
 
         self.contained_guids = []
         self.contained_labels = []
+        self.choosen_guid = ''
+
+        self.context_menu = tkinter.Menu(self, tearoff=0)
+        self.context_menu.add_command(label="Remove Game", command=self.context_menu_remove)
+        self.context_menu.add_command(label="Close")
         
 
 
@@ -70,16 +75,27 @@ class App(customtkinter.CTk):
         # source:   https://stackoverflow.com/questions/3296893/how-to-pass-an-argument-to-event-handler-in-tkinter
         #           https://www.youtube.com/watch?v=VnwDPa9biwc        
         data = {"guid": guid}
-        label.bind("<Button-1>", lambda event, arg=data: self.clicked_image(event, arg)) 
+        label.bind("<Button-1>", lambda event, arg=data: self.clicked_image(event, arg))
+        label.bind("<Button-3>", lambda event, arg=data: self.show_context_menu(event, arg))
 
         self.contained_labels.append(label)
 
+    def show_context_menu(self, event, arg):
+        self.choosen_guid = arg["guid"]
+        self.context_menu.post(event.x_root, event.y_root)
 
+    def context_menu_remove(self):
+        self.remove_game_from_container(self.choosen_guid)
 
     def clicked_image(self, event, arg):
-        print(f'image was clicked with guid:{arg["guid"]}')
-        self.remove_game_from_container(arg["guid"])
+        print(f'image was clicked with guid: {arg["guid"]}')
+        #self.remove_game_from_container(arg["guid"])
 
+        #label = self.get_label(arg["guid"])
+        
+    def get_label(self, guid):
+        index = self.contained_guids.index(guid)
+        return self.contained_labels[index]
     
     def remove_game_from_container(self, guid):
         
