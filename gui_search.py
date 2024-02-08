@@ -72,9 +72,10 @@ class GameBrowserFrame(customtkinter.CTkScrollableFrame):
         self.game_info_frame.grid_rowconfigure((0, 1), weight=1)
         self.game_info_frame.grid_columnconfigure((0,1), weight=1)
 
-        self.main_image = customtkinter.CTkImage(light_image=Image.open('Python.svg.png'))
+        self.pillow_image = Image.open('Python.svg.png')
+        self.main_image = customtkinter.CTkImage(light_image=self.pillow_image)
+        self.main_image_ratio = self.pillow_image.size[0] / self.pillow_image.size[1]
 
-        self.main_image_ratio = float(self.main_image.cget('size')[0]) / float(self.main_image.cget('size')[1])
 
         self.main_image_label = customtkinter.CTkLabel(self.game_info_frame, 
                                                        text="", 
@@ -171,16 +172,16 @@ class GameBrowserFrame(customtkinter.CTkScrollableFrame):
         self.genres_title.set(', '.join(i['name'] for i in game_data['genres']))
 
 
-        self.main_image = customtkinter.CTkImage(light_image=Image.open(image_path))
-
-        self.main_image_ratio = float(self.main_image.cget('size')[0]) / float(self.main_image.cget('size')[1])
+        self.pillow_image = Image.open(image_path)
+        self.main_image = customtkinter.CTkImage(light_image=self.pillow_image)
+        self.main_image_ratio = self.pillow_image.size[0] / self.pillow_image.size[1]
 
 
         self.main_image_label.configure(image=self.main_image)
 
     def adjust_image(self, event):
-
         # source: https://www.youtube.com/watch?v=VnwDPa9biwc
+
         event.height = 350
 
         container_ratio = event.width / event.height
