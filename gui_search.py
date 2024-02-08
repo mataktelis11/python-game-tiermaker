@@ -3,9 +3,22 @@
 import customtkinter
 import tkinter
 from PIL import Image
-
+import tomllib
 from GameBrowserFrame import GameBrowserFrame
 import game_parser2
+
+
+
+with open("config.toml", "rb") as f:
+        config = tomllib.load(f)
+
+
+class TierFrame(customtkinter.CTkFrame):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.guids = []
+        self.labels = []
 
 
         
@@ -24,12 +37,49 @@ class App(customtkinter.CTk):
 
         self.tabview.add("Tier list")  # add tab at the end
         self.tabview.add("Game Search")  # add tab at the end
-        self.tabview.set("Game Search")  # set currently visible tab
+        self.tabview.set("Tier list")  # set currently visible tab
 
         self.gamebrowserframe = GameBrowserFrame(master=self.tabview.tab("Game Search"))
         self.gamebrowserframe.pack(fill=customtkinter.BOTH, expand=1)
 
         self.gamebrowserframe.append_button.configure(command=self.append_image_button)
+
+        # creating tiers
+
+        self.tiers = config['tiers']
+        self.tiersColors = config['tiersColors']
+
+        self.logo_n_container_tier = []
+        self.logo_tier = []
+        self.container_tier = []
+
+        for i in range(len(self.tiers)):
+            
+            self.logo_n_container_tier.append(customtkinter.CTkFrame(master=self.tabview.tab("Tier list")))
+
+            self.logo_tier.append(customtkinter.CTkLabel(master=self.logo_n_container_tier[i], 
+                                              height=170,
+                                              width=40,
+                                              fg_color=self.tiersColors[i], 
+                                              text=self.tiers[i])
+            )
+            self.logo_tier[i].pack(side=customtkinter.LEFT)
+
+            self.container_tier.append(TierFrame(master=self.logo_n_container_tier[i], 
+                                                 height=170, 
+                                                 fg_color='#044536'))
+            self.container_tier[i].pack(side=customtkinter.LEFT, fill=customtkinter.X, expand=1)
+
+            self.logo_n_container_tier[i].pack(side=customtkinter.TOP, fill=customtkinter.X, expand=1)
+
+
+        # self.label_a = customtkinter.CTkLabel(master=self.tabview.tab("Tier list"), 
+        #                                 height=170,
+        #                                 width=40,
+        #                                 fg_color='blue', 
+        #                                 text='A')
+        
+        # self.label_a.pack(side=customtkinter.LEFT)
 
         #self.gamebrowserframe.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
@@ -80,6 +130,33 @@ class App(customtkinter.CTk):
 
         self.contained_labels.append(label)
 
+
+    def append_game_to_tier(self, frame, guid):
+        if guid in frame.guids:
+            print('Game already in container')
+            return
+        
+        frame.guids.append(guid)
+        game_data, image_path = game_parser2.search_cache_data(guid)
+
+        # Load the image
+        pillow_image = Image.open(image_path)
+        image_ratio = pillow_image.size[0] / pillow_image.size[1]
+        container_ratio = 1.0
+
+        if container_ratio > image_ratio:
+            height = 120
+            width = int(height * image_ratio)
+        else:
+            width = 120
+            height = int(width / image_ratio)
+
+        main_image = customtkinter.CTkImage(light_image=pillow_image, size=(width,height))
+        label = customtkinter.CTkLabel(frame, image=main_image, text='')        
+        label.pack(side= customtkinter.LEFT, padx=5, pady=5)
+        frame.labels.append(label)
+
+
     def show_context_menu(self, event, arg):
         self.choosen_guid = arg["guid"]
         self.context_menu.post(event.x_root, event.y_root)
@@ -92,6 +169,8 @@ class App(customtkinter.CTk):
         #self.remove_game_from_container(arg["guid"])
 
         #label = self.get_label(arg["guid"])
+
+        self.append_game_to_tier(self.container_tier[0],arg["guid"])
         
     def get_label(self, guid):
         index = self.contained_guids.index(guid)
