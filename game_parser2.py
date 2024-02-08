@@ -108,6 +108,14 @@ def fetch_game_guid(title):
 
 
 def fetch_game_data(guid):
+
+    # check if game is cached
+
+    if os.path.isdir(os.path.join(config['CACHE_DIR'], guid)):
+
+        game_dir = os.path.join(config['CACHE_DIR'], guid)
+        print(f"Found cached information in {game_dir}")
+        return
      
     # use the guid to fetch the necessary game info
 
@@ -151,9 +159,9 @@ def fetch_game_data(guid):
 
     #print(game_data)
             
-    os.mkdir(os.path.join(config['CACHE_DIR'], game_data['title']))
+    os.mkdir(os.path.join(config['CACHE_DIR'], guid))
 
-    with open(os.path.join(config['CACHE_DIR'], game_data['title'], 'game_data.json'), 'w') as f:
+    with open(os.path.join(config['CACHE_DIR'], guid, 'game_data.json'), 'w') as f:
         json.dump(game_data, f, indent=4)
 
 
@@ -162,5 +170,20 @@ def fetch_game_data(guid):
 
     #print(image_url)
 
-    wget.download(image_url, os.path.join(config['CACHE_DIR'],game_data['title'],'image.jpg'), bar=False)
+    wget.download(image_url, os.path.join(config['CACHE_DIR'],guid,'image.jpg'), bar=False)
     
+
+def search_cache_data(guid):
+    if os.path.isdir(os.path.join(config['CACHE_DIR'], guid)):
+
+        game_dir = os.path.join(config['CACHE_DIR'], guid)
+
+        print(f"Found cached information in {game_dir}")
+
+        with open(os.path.join(game_dir, 'game_data.json')) as json_file:
+            game_data = json.load(json_file)
+
+            return game_data, os.path.join(game_dir, 'image.jpg')
+    else:
+        print('Game not in cache!')
+        return None
