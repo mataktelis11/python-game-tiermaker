@@ -5,7 +5,7 @@ import tkinter
 from PIL import Image
 import tomllib
 from GameBrowserFrame import GameBrowserFrame
-import game_parser2
+import game_parser
 import os
 
 
@@ -26,7 +26,7 @@ class TierFrame(customtkinter.CTkFrame):
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
-        self.geometry("800x1200")
+        self.geometry("1200x1200")
         self.minsize(600,600)
         self.grid_rowconfigure(0, weight=10) 
         self.grid_rowconfigure(1, weight=1) 
@@ -119,7 +119,7 @@ class App(customtkinter.CTk):
             return
 
         self.contained_guids.append(guid)
-        game_data, image_path = game_parser2.search_cache_data(guid)
+        game_data, image_path = game_parser.search_cache_data(guid)
 
         # Load the image
         pillow_image = Image.open(image_path)
@@ -153,7 +153,7 @@ class App(customtkinter.CTk):
             return
         
         frame.guids.append(guid)
-        game_data, image_path = game_parser2.search_cache_data(guid)
+        game_data, image_path = game_parser.search_cache_data(guid)
 
         # Load the image
         pillow_image = Image.open(image_path)

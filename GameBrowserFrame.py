@@ -2,7 +2,7 @@
 import customtkinter
 from PIL import Image
 from CTkListbox import *
-import game_parser2
+import game_parser
 
 
 class GameBrowserFrame(customtkinter.CTkScrollableFrame):
@@ -151,7 +151,7 @@ class GameBrowserFrame(customtkinter.CTkScrollableFrame):
             self.listbox.delete(0, customtkinter.END)
             return
 		
-        self.fetched_games = game_parser2.search_game_with_API(self.user_entry.get())
+        self.fetched_games = game_parser.search_game_with_API(self.user_entry.get())
 
         titles = [element['name'] for element in self.fetched_games]
 
@@ -162,14 +162,14 @@ class GameBrowserFrame(customtkinter.CTkScrollableFrame):
     def fetch_button_function(self):
         
         print(f'Fetch me guid {self.fetched_games[self.listbox.curselection()]}')
-        game_parser2.fetch_game_data(self.fetched_games[self.listbox.curselection()]['guid'])
+        game_parser.fetch_game_data(self.fetched_games[self.listbox.curselection()]['guid'])
 
         self.load_game_data(self.fetched_games[self.listbox.curselection()]['guid'])
 
 
     def load_game_data(self, guid):
 
-        game_data, image_path = game_parser2.search_cache_data(guid)
+        game_data, image_path = game_parser.search_cache_data(guid)
 
         self.string_title.set(game_data['title'])
         self.rdate_title.set(game_data['original_release_date'])

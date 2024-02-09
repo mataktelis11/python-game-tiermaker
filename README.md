@@ -36,6 +36,8 @@ tiersColors = ['#c42708', '#c47608', '#bec408', '#79c408', '#08c486']
 ```
 You also need to create an empty folder and specify it as the ```CACHE_DIR``` in ```config.tom```.
 
+Run the app by executing the script ```gui_main.py```
+
 # Notes 
 - The app was mostly tested on Debian 12 Linux. If you find bugs in your own OS, you can raise an issue.
 - The app doesn't use drag n drop for the creation of the tierlists.
