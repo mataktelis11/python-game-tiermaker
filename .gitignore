@@ -3,3 +3,4 @@ config.toml
 *.db
 *.csv
 __pycache__
+guienv/
