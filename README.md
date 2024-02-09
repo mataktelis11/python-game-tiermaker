@@ -1,19 +1,31 @@
 # Python Game Tiermaker
-A GUI app that lets you search for games and create a tierlist. The app uses the API provided by [giantbomb.com](giantbomb.com).
+A cross-platform desktop GUI app that lets you create a tierlist of video games. The app uses the API provided by [giantbomb.com](giantbomb.com) to search for and download game cover images.
 
 # Overview
 
 ![Peek 2024-02-09 03-49](https://github.com/mataktelis11/python-game-parser/assets/61196956/d67c108f-bf05-4c08-a3a0-6a75fd8a69e7)
 
 # Requirements
-Python 3.11 was used. A requirements.txt file is also included.
+- Python 3 (vresion 3.11 was used)
+- git
 
-```
+For Unix:
+```bash
+$ git clone https://github.com/mataktelis11/python-game-parser.git
 $ python3 -m venv guienv
 $ source guienv/bin/activate
 $ pip install -r requirements.txt
 ```
-Since this app is purely experimental, the API key is not provided. You can create your own key by registering an account in [giantbomb.com](giantbomb.com).
+
+For Windows:
+```cmd
+$ git clone https://github.com/mataktelis11/python-game-parser.git
+$ python -m venv guienv
+$ guienv\Scripts\activate.bat
+$ pip install -r requirements.txt
+```
+
+Since this app is **purely experimental**, the API key is **not** provided. You can create your own key by registering an account in [giantbomb.com](giantbomb.com).
 
 To run the app you also need to create a ```config.tom``` file that looks like this:
 ```toml
