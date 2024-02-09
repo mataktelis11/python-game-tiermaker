@@ -1,6 +1,12 @@
 # Python Game Tiermaker
 A cross-platform desktop GUI app that lets you create a tierlist of video games. The app uses the API provided by [giantbomb.com](giantbomb.com) to search for and download game cover images.
 
+![GitHub top language](https://img.shields.io/github/languages/top/mataktelis11/python-game-tiermaker)
+![GitHub License](https://img.shields.io/github/license/mataktelis11/python-game-tiermaker)
+![GitHub issues](https://img.shields.io/github/issues/mataktelis11/python-game-tiermaker)
+
+
+
 # Overview
 
 ![Peek 2024-02-09 03-49](https://github.com/mataktelis11/python-game-parser/assets/61196956/d67c108f-bf05-4c08-a3a0-6a75fd8a69e7)
