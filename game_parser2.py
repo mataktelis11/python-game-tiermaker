@@ -168,9 +168,16 @@ def fetch_game_data(guid):
     image_url = str(raw_data['results']['image']['original_url'])
     image_url = image_url.replace('\\','')
 
-    #print(image_url)
+    print(image_url)
 
-    wget.download(image_url, os.path.join(config['CACHE_DIR'],guid,'image.jpg'), bar=False)
+    #wget.download(image_url, os.path.join(config['CACHE_DIR'],guid,'image.jpg'), bar=False)
+    # wget throughs 404
+    # https://stackoverflow.com/questions/30229231/python-save-image-from-url
+    img_data = requests.get(image_url).content
+    with open(os.path.join(config['CACHE_DIR'],guid,'image.jpg'), 'wb') as handler:
+        handler.write(img_data)
+
+
     
 
 def search_cache_data(guid):

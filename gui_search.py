@@ -6,6 +6,7 @@ from PIL import Image
 import tomllib
 from GameBrowserFrame import GameBrowserFrame
 import game_parser2
+import os
 
 
 
@@ -42,7 +43,9 @@ class App(customtkinter.CTk):
         self.gamebrowserframe = GameBrowserFrame(master=self.tabview.tab("Game Search"))
         self.gamebrowserframe.pack(fill=customtkinter.BOTH, expand=1)
 
-        self.gamebrowserframe.append_button.configure(command=self.append_image_button)
+        self.gamebrowserframe.append_button_all.configure(command=self.append_all_images_button)
+
+        self.gamebrowserframe.append_button.configure(command=self.append_selected_image_button)
 
         # creating tiers
 
@@ -258,7 +261,9 @@ class App(customtkinter.CTk):
 
         #label = self.get_label(arg["guid"])
 
-        self.append_game_to_tier(self.container_tier[0],arg["guid"])
+        #self.append_game_to_tier(self.container_tier[0],arg["guid"])
+
+        self.gamebrowserframe.load_game_data(arg["guid"])
         
     def get_label(self, guid):
         index = self.contained_guids.index(guid)
@@ -278,9 +283,8 @@ class App(customtkinter.CTk):
 
 
 
-    def append_image_button(self):
-        guids = ['3030-20464', '3030-25305', '3030-45214', '3030-64883', '3030-20953', '3030-30196',
-                 '3030-73838', '3030-21170', '3030-31463', '3030-59912']
+    def append_all_images_button(self):
+        guids = os.listdir(config['CACHE_DIR'])
         
         for g in guids:
             
@@ -288,6 +292,12 @@ class App(customtkinter.CTk):
 
         print(self.contained_guids)
 
+    def append_selected_image_button(self):
+
+        if self.gamebrowserframe.current_guid == '':
+            return
+
+        self.append_game_to_container(self.gamebrowserframe.current_guid)        
 
 app = App()
 app.mainloop()

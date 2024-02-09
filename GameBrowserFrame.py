@@ -9,7 +9,9 @@ class GameBrowserFrame(customtkinter.CTkScrollableFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
+        self.current_guid = ''
         self.fetched_games = []
+
 
         self.grid_rowconfigure((0,1,2,3,4,5), weight=1) 
         self.grid_columnconfigure((0), weight=1)
@@ -84,7 +86,7 @@ class GameBrowserFrame(customtkinter.CTkScrollableFrame):
 
 
         self.all_info_frame = customtkinter.CTkFrame(master=self.game_info_frame)
-        self.all_info_frame.grid_rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+        self.all_info_frame.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
         self.all_info_frame.grid_columnconfigure((0,1), weight=1)
 
         labels = ['Title', 'Original release date', 'Platforms', 'Developers', 'Publishers', 'Genres']
@@ -134,6 +136,9 @@ class GameBrowserFrame(customtkinter.CTkScrollableFrame):
         self.append_button = customtkinter.CTkButton(self, text='Append image to container')
         self.append_button.grid(row=5, column=0, sticky='swe', padx=20, pady=20)
 
+        self.append_button_all = customtkinter.CTkButton(self, text='Append all cached images to container')
+        self.append_button_all.grid(row=6, column=0, sticky='swe', padx=20, pady=20)
+
     def onselect(self, evt):
 
         #print(self.listbox.curselection())
@@ -180,6 +185,8 @@ class GameBrowserFrame(customtkinter.CTkScrollableFrame):
 
 
         self.main_image_label.configure(image=self.main_image)
+
+        self.current_guid = guid
 
     def adjust_image(self, event):
         # source: https://www.youtube.com/watch?v=VnwDPa9biwc
