@@ -99,7 +99,12 @@ class App(customtkinter.CTk):
         self.context_menu.add_separator()
         self.context_menu.add_command(label="Remove Game", command=self.context_menu_remove)
         self.context_menu.add_command(label="Close")
-        
+
+
+
+        self.tier_context_menu = tkinter.Menu(self, tearoff=0)
+        self.tier_context_menu.add_command(label="Remove Game", command=self.context_tier_remove_game)
+        self.tier_context_menu.add_command(label="Close")
 
 
     def append_game_to_container(self, guid):
@@ -151,21 +156,52 @@ class App(customtkinter.CTk):
         container_ratio = 1.0
 
         if container_ratio > image_ratio:
-            height = 130
+            height = 150
             width = int(height * image_ratio)
         else:
-            width = 130
+            width = 150
             height = int(width / image_ratio)
 
         main_image = customtkinter.CTkImage(light_image=pillow_image, size=(width,height))
         label = customtkinter.CTkLabel(frame, image=main_image, text='')        
-        label.pack(side= customtkinter.LEFT, padx=5, pady=5)
+        #label.pack(side= customtkinter.LEFT, padx=5, pady=5)
         frame.labels.append(label)
 
+        label.grid(row=0, column=len(frame.labels)-1, padx=5, pady=5)
+
+        data = {"guid": guid}
+        label.bind("<Button-3>", lambda event, arg=data: self.show_tier_context_menu(event, arg))
 
     def show_context_menu(self, event, arg):
         self.choosen_guid = arg["guid"]
         self.context_menu.post(event.x_root, event.y_root)
+
+    def show_tier_context_menu(self, event, arg):
+        self.choosen_guid = arg["guid"]
+        self.tier_context_menu.post(event.x_root, event.y_root)
+
+    def context_tier_remove_game(self):
+
+        current_guid = self.choosen_guid
+        
+        for tierlist in self.container_tier:
+            if current_guid in tierlist.guids:
+
+                index = tierlist.guids.index(current_guid)
+                tierlist.guids.pop(index)
+
+                tierlist.labels[index].destroy()
+                tierlist.labels.pop(index)
+
+                # rearange grid
+                for index,label in enumerate(tierlist.labels):
+                    label.grid(row=0, column=index, padx=5, pady=5)
+
+                self.append_game_to_container(current_guid)
+                return
+        print('guid not found in tierlists!')
+
+
 
     def context_menu_remove(self):
         self.remove_game_from_container(self.choosen_guid)
@@ -200,6 +236,7 @@ class App(customtkinter.CTk):
 
         self.contained_labels[index].destroy()
         self.contained_labels.pop(index)
+
 
 
     def append_image_button(self):
