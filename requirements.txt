@@ -1,0 +1,17 @@
+beautifulsoup4==4.12.3
+bs4==0.0.2
+certifi==2023.11.17
+charset-normalizer==3.3.2
+click==8.1.7
+CTkListbox==1.2
+customtkinter==5.2.2
+darkdetect==0.8.0
+idna==3.6
+jellyfish==1.0.3
+mysql-connector-python==8.3.0
+packaging==23.2
+pillow==10.2.0
+requests==2.31.0
+soupsieve==2.5
+urllib3==2.2.0
+wget==3.2
