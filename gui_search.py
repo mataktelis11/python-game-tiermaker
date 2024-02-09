@@ -103,6 +103,8 @@ class App(customtkinter.CTk):
 
 
         self.tier_context_menu = tkinter.Menu(self, tearoff=0)
+        self.tier_context_menu.add_command(label="Move to the right <", command=self.context_tier_move_right)
+        self.tier_context_menu.add_command(label="Move to the left >", command=self.context_tier_move_left)
         self.tier_context_menu.add_command(label="Remove Game", command=self.context_tier_remove_game)
         self.tier_context_menu.add_command(label="Close")
 
@@ -201,7 +203,44 @@ class App(customtkinter.CTk):
                 return
         print('guid not found in tierlists!')
 
+    def context_tier_move_right(self):
 
+        current_guid = self.choosen_guid
+        
+        for tierlist in self.container_tier:
+            if current_guid in tierlist.guids:
+
+                index = tierlist.guids.index(current_guid)
+                if index == 0: return
+
+                tierlist.guids[index-1], tierlist.guids[index] = tierlist.guids[index], tierlist.guids[index-1]
+                tierlist.labels[index-1], tierlist.labels[index] = tierlist.labels[index], tierlist.labels[index-1]
+
+                tierlist.labels[index].grid(row=0, column=index, padx=5, pady=5)
+                tierlist.labels[index-1].grid(row=0, column=index-1, padx=5, pady=5)
+
+                return
+        print('guid not found in tierlists!')
+
+    def context_tier_move_left(self):
+
+        current_guid = self.choosen_guid
+        
+        for tierlist in self.container_tier:
+            if current_guid in tierlist.guids:
+
+                index = tierlist.guids.index(current_guid)
+                if len(tierlist.guids) == 1: return
+                if index == len(tierlist.guids)-1: return
+
+                tierlist.guids[index+1], tierlist.guids[index] = tierlist.guids[index], tierlist.guids[index+1]
+                tierlist.labels[index+1], tierlist.labels[index] = tierlist.labels[index], tierlist.labels[index+1]
+
+                tierlist.labels[index].grid(row=0, column=index, padx=5, pady=5)
+                tierlist.labels[index+1].grid(row=0, column=index+1, padx=5, pady=5)
+
+                return
+        print('guid not found in tierlists!')
 
     def context_menu_remove(self):
         self.remove_game_from_container(self.choosen_guid)
