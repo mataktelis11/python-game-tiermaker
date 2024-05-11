@@ -33,14 +33,14 @@ $ pip install -r requirements.txt
 
 Since this app is **purely experimental**, the API key is **not** provided. You can create your own key by registering an account in [giantbomb.com](giantbomb.com).
 
-To run the app you also need to create a ```config.tom``` file that looks like this:
+To run the app you also need to create a ```config.toml``` file that looks like this:
 ```toml
 APIKEY = 'YOUR API KEY'
 CACHE_DIR = 'YOUR CACHE FOLDER'
 tiers = ['S', 'A', 'B', 'C', 'D']
 tiersColors = ['#c42708', '#c47608', '#bec408', '#79c408', '#08c486']
 ```
-You also need to create an empty folder and specify it as the ```CACHE_DIR``` in ```config.tom```.
+You also need to create an empty folder and specify it as the ```CACHE_DIR``` in ```config.toml```.
 
 Run the app by executing the script ```gui_main.py```
 
